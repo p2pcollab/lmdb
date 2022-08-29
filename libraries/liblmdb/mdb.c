@@ -9989,7 +9989,7 @@ mdb_rebalance(MDB_cursor *mc)
 			mc->mc_db->md_root = P_INVALID;
 			mc->mc_db->md_depth = 0;
 			mc->mc_db->md_leaf_pages = 0;
-			rc = mdb_page_loose(mc, mp);
+			rc = mdb_midl_append(&mc->mc_txn->mt_free_pgs, mp->mp_pgno);
 			if (rc)
 				return rc;
 			/* Adjust cursors pointing to mp */
@@ -10017,7 +10017,7 @@ mdb_rebalance(MDB_cursor *mc)
 		} else if (IS_BRANCH(mp) && NUMKEYS(mp) == 1) {
 			int i;
 			DPUTS("collapsing root page!");
-			rc = mdb_page_loose(mc, mp);
+			rc = mdb_midl_append(&mc->mc_txn->mt_free_pgs, mp->mp_pgno);
 			if (rc)
 				return rc;
 			mc->mc_db->md_root = NODEPGNO(NODEPTR(mp, 0));
