@@ -67,12 +67,12 @@ test:	all
 	rm -rf testdb && mkdir testdb
 	./mtest && ./mdb_stat testdb
 
-liblmdb.a:	mdb.o midl.o
-	$(AR) rs $@ mdb.o midl.o
+liblmdb.a:	mdb.o midl.o chacha8.o
+	$(AR) rs $@ mdb.o midl.o chacha8.o
 
-liblmdb$(SOEXT):	mdb.lo midl.lo
+liblmdb$(SOEXT):	mdb.lo midl.lo chacha8.o
 #	$(CC) $(LDFLAGS) -pthread -shared -Wl,-Bsymbolic -o $@ mdb.o midl.o $(SOLIBS)
-	$(CC) $(LDFLAGS) -pthread -shared -o $@ mdb.lo midl.lo $(SOLIBS)
+	$(CC) $(LDFLAGS) -pthread -shared -o $@ mdb.lo midl.lo chacha8.o $(SOLIBS)
 
 mdb_stat: mdb_stat.o module.o liblmdb.a
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDL)
@@ -91,7 +91,7 @@ mtest4:	mtest4.o liblmdb.a
 mtest5:	mtest5.o liblmdb.a
 mtest6:	mtest6.o liblmdb.a
 mtest_remap:  mtest_remap.o liblmdb.a
-mtest_enc:    mtest_enc.o chacha8.o liblmdb.a
+mtest_enc:    mtest_enc.o liblmdb.a
 mtest_enc2:	  mtest_enc2.o module.o liblmdb.a crypto.lm
 	$(CC) $(LDFLAGS) -pthread -o $@ mtest_enc2.o module.o liblmdb.a $(LDL)
 

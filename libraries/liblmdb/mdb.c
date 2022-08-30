@@ -6298,7 +6298,7 @@ mdb_env_close(MDB_env *env)
 
 	mdb_env_close_active(env, 0);
 #if MDB_RPAGE_CACHE
-	free(env->me_enckey.mv_data);
+	//free(env->me_enckey.mv_data);
 #endif
 	free(env);
 }
@@ -10726,6 +10726,25 @@ done:
 	return rc;
 }
 
+#include "chacha8.h"
+
+static int encfunc(const MDB_val *src, MDB_val *dst, const MDB_val *key, int encdec)
+{
+	chacha8(src->mv_data, src->mv_size, key[0].mv_data, key[1].mv_data, dst->mv_data);
+	return 0;
+}
+
+int
+mdb_env_init_crypto(MDB_env *env, void *key) {
+
+	MDB_val enckey;
+	enckey.mv_data = key;
+	enckey.mv_size = 32;
+	int ret = mdb_env_set_encrypt(env, encfunc, &enckey, 0);
+	//fprintf(stderr,"return of mdb_env_init_crypto %d\n",ret);
+	return ret;
+}
+
 int
 mdb_put(MDB_txn *txn, MDB_dbi dbi,
     MDB_val *key, MDB_val *data, unsigned int flags)
@@ -11361,18 +11380,18 @@ mdb_env_set_assert(MDB_env *env, MDB_assert_func *func)
 int ESECT
 mdb_env_set_encrypt(MDB_env *env, MDB_enc_func *func, const MDB_val *key, unsigned int size)
 {
-	char *kdata;
+	//char *kdata;
 
 	if (!env || !func || !key)
 		return EINVAL;
 	if (env->me_flags & MDB_ENV_ACTIVE)
 		return EINVAL;
-	if (! (kdata = malloc(key[0].mv_size)))
-		return ENOMEM;
+	//if (! (kdata = malloc(key[0].mv_size)))
+	//	return ENOMEM;
 
-	memcpy(kdata,  key->mv_data, key->mv_size);
+	//memcpy(kdata,  key->mv_data, key->mv_size);
 	free(env->me_enckey.mv_data);
-	env->me_enckey.mv_data = kdata;
+	env->me_enckey.mv_data = key->mv_data;//kdata;
 	env->me_enckey.mv_size = key->mv_size;
 	env->me_encfunc = func;
 	if (size)

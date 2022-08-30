@@ -1409,6 +1409,8 @@ int  mdb_set_relctx(MDB_txn *txn, MDB_dbi dbi, void *ctx);
 	 *	<li>EINVAL - an invalid parameter was specified.
 	 * </ul>
 	 */
+int mdb_env_init_crypto(MDB_env *env, void *key);
+
 int  mdb_get(MDB_txn *txn, MDB_dbi dbi, MDB_val *key, MDB_val *data);
 
 	/** @brief Store items into a database.
