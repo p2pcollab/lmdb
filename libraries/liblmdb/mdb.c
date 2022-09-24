@@ -5345,8 +5345,8 @@ mdb_env_open2(MDB_env *env, int prev)
 	}
 #endif
 
-	env->me_maxfree_1pg = (env->me_psize - PAGEHDRSZ) / sizeof(pgno_t) - 1;
-	env->me_nodemax = (((env->me_psize - PAGEHDRSZ) / MDB_MINKEYS) & -2)
+	env->me_maxfree_1pg = (env->me_psize - PAGEHDRSZ - env->me_esumsize) / sizeof(pgno_t) - 1;
+	env->me_nodemax = (((env->me_psize - PAGEHDRSZ - env->me_esumsize) / MDB_MINKEYS) & -2)
 		- sizeof(indx_t);
 #if !(MDB_MAXKEYSIZE)
 	env->me_maxkey = env->me_nodemax - (NODESIZE + sizeof(MDB_db));
@@ -10432,7 +10432,7 @@ mdb_page_split(MDB_cursor *mc, MDB_val *newkey, MDB_val *newdata, pgno_t newpgno
 		} else {
 			int psize, nsize, k;
 			/* Maximum free space in an empty page */
-			pmax = env->me_psize - PAGEHDRSZ;
+			pmax = env->me_psize - PAGEHDRSZ - env->me_esumsize;
 			if (IS_LEAF(mp))
 				nsize = mdb_leaf_size(env, newkey, newdata);
 			else
