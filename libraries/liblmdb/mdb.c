@@ -10729,6 +10729,7 @@ done:
 
 static int encfunc(const MDB_val *src, MDB_val *dst, const MDB_val *key, int encdec)
 {
+	fprintf(stdout,"encrypting %d bytes with MAC size %d\n",src->mv_size, key[2].mv_size);
 	chacha8(src->mv_data, src->mv_size, key[0].mv_data, key[1].mv_data, dst->mv_data);
 	return 0;
 }
