@@ -10739,7 +10739,7 @@ mdb_env_init_crypto(MDB_env *env, void *key) {
 	MDB_val enckey;
 	enckey.mv_data = key;
 	enckey.mv_size = 32;
-	int ret = mdb_env_set_encrypt(env, encfunc, &enckey, 0);
+	int ret = mdb_env_set_encrypt(env, encfunc, &enckey, 32);
 	//fprintf(stderr,"return of mdb_env_init_crypto %d\n",ret);
 	return ret;
 }
