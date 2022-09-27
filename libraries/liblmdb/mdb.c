@@ -4198,6 +4198,11 @@ mdb_env_read_header(MDB_env *env, int prev, MDB_meta *meta)
 	return 0;
 }
 
+mdb_env_init_crypto(MDB_env *env, void *key) {
+
+	return 0;
+}
+
 /** Fill in most of the zeroed #MDB_meta for an empty database environment */
 static void ESECT
 mdb_env_init_meta0(MDB_env *env, MDB_meta *meta)
