@@ -10729,7 +10729,7 @@ done:
 
 static int encfunc(const MDB_val *src, MDB_val *dst, const MDB_val *key, int encdec)
 {
-	fprintf(stdout,"encrypting %d bytes with MAC size %d\n",src->mv_size, key[2].mv_size);
+	//fprintf(stdout,"encrypting %d bytes with MAC size %d\n",src->mv_size, key[2].mv_size);
 	chacha8(src->mv_data, src->mv_size, key[0].mv_data, key[1].mv_data, dst->mv_data);
 	return 0;
 }
@@ -10740,7 +10740,7 @@ mdb_env_init_crypto(MDB_env *env, void *key) {
 	MDB_val enckey;
 	enckey.mv_data = key;
 	enckey.mv_size = 32;
-	int ret = mdb_env_set_encrypt(env, encfunc, &enckey, 32);
+	int ret = mdb_env_set_encrypt(env, encfunc, &enckey, 0);
 	//fprintf(stderr,"return of mdb_env_init_crypto %d\n",ret);
 	return ret;
 }
